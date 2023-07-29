@@ -1,4 +1,4 @@
-package main
+package models
 
 type Request struct {
 	_meta string `table:"requests"`

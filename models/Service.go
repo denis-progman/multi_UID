@@ -1,4 +1,4 @@
-package main
+package models
 
 type Service struct {
 	Id    int    `column:"id"`

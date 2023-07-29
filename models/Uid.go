@@ -1,4 +1,4 @@
-package main
+package models
 
 type Uid struct {
 	_meta string `table:"uids"`
