@@ -1,4 +1,4 @@
-module solid/api
+module uid
 
 go 1.20
 
