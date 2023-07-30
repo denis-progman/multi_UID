@@ -3,23 +3,28 @@ package main
 import (
 	"fmt"
 	"log"
-	"github.com/gorilla/mux"
 	"net/http"
+	"github.com/gorilla/mux"
+	"uid/db"
 )
 
-func routsListener() {
+func RoutsListener() {
 	router := mux.NewRouter()
-	port := ":8000"
-	router.
+	port := ":80"
+	
 	router.HandleFunc("/", func(resp http.ResponseWriter, rec *http.Request) {
 		fmt.Fprintln(resp, "App is run")
 	})
 
-	router.HandleFunc("/get_all_uid_user_services", getAllUIDUserServices).Methods("GET")
+	router.HandleFunc("/migrations", func(resp http.ResponseWriter, rec *http.Request) {
+		fmt.Fprintln(resp, db.RunMigrations(rec.URL.Query().Get("make")))
+	})
 
-	router.HandleFunc("/makeRequest", addPost).Methods("POST")
+	router.HandleFunc("/makeRequest", makeRequest).Methods("POST")
+
+
 
 
 	log.Println("Server is listening port: ", port)
-	log.Fatalln(http.ListenAndServe(port, router))
+	go log.Fatalln(http.ListenAndServe(port, router))
 }
