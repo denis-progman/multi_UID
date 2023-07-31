@@ -20,26 +20,16 @@ func setHeaders(resp http.ResponseWriter) {
 // }
 
 func makeRequest(resp http.ResponseWriter, req *http.Request) {
-	setHeaders(resp)
 	requestAPIRequest := new(models.RequestAPIRequest)
-	err := json.NewDecoder(req.Body).Decode(&requestAPIRequest)
+	log.Println(json.NewDecoder(req.Body).Decode(&requestAPIRequest))
 
-	if err != nil {
-		log.Fatal(err)
+	if request, err := repository.MakeRequest(requestAPIRequest, connection); err == nil {
+		setHeaders(resp)
+		resp.WriteHeader(http.StatusOK)
+		if result, err := json.Marshal(request); err == nil {
+			resp.Write(result) 
+		}
+		log.Println(err)
 	} 
-
-	request, err := repository.MakeRequest(requestAPIRequest, connection)
-
-	if err != nil {
-		log.Fatal(err)
-	} 
-	
-	resp.WriteHeader(http.StatusOK)
-	result, err := json.Marshal(request)
-
-	if err != nil {
-		log.Fatal(err)
-	} 
-
-	resp.Write(result) 
+	// log.Println(err)
  }
