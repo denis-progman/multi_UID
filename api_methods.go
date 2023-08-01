@@ -19,11 +19,12 @@ func setHeaders(resp http.ResponseWriter) {
 // 	setHeaders(resp)
 // }
 
-func makeRequest(resp http.ResponseWriter, req *http.Request) {
+func makeRequest(resp http.ResponseWriter, req *http.Request) error {
 	requestAPIRequest := new(models.RequestAPIRequest)
 	log.Println(json.NewDecoder(req.Body).Decode(&requestAPIRequest))
 
-	if request, err := repository.MakeRequest(requestAPIRequest, connection); err == nil {
+	var request *models.Request
+	if request, err = repository.MakeRequest(requestAPIRequest, connection); err != nil {
 		setHeaders(resp)
 		resp.WriteHeader(http.StatusOK)
 		if result, err := json.Marshal(request); err == nil {
@@ -31,5 +32,5 @@ func makeRequest(resp http.ResponseWriter, req *http.Request) {
 		}
 		log.Println(err)
 	} 
-	// log.Println(err)
+	log.Println(request)
  }
